@@ -41,19 +41,19 @@ jobs:
         run: |
           cd ogdf-conda/src
           cmake -G "Visual Studio 17 2022" -A x64 -T ClangCL .
-          make
+          cmake --build .
           mkdir lib
           mv *.dll lib
 
       - name: build tmap
         run: |
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "Visual Studio 17 2022" -A x64 -T ClangCL .
-          make
+          cmake --build .
           ls -ltrh *.dll
 
       - name: make zip of binaries
         run: |
-          zip binaries-${{ runner.os }}.zip ogdf-conda/src/lib *.dll
+          zip binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* *.dll
 
       - uses: ncipollo/release-action@v1
         with:
