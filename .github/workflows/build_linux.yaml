@@ -31,7 +31,7 @@ jobs:
 
       - name: make zip of binaries
         run: |
-          zip binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* out/*
+          zip -j binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* out/*
 
       - uses: softprops/action-gh-release@v1
         with:
