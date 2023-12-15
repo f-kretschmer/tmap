@@ -1,0 +1,53 @@
+name: build_windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
+      #   with:
+      #     repository: ogdf/ogdf
+      #     path: ogdf
+
+      - name: setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            git
+            zip
+
+      - name: cache OGDF built
+        id: cache-ogdf
+        uses: actions/cache@v3
+        with:
+          path:  ogdf-conda/src/lib
+          key: ${{ runner.os }}-ogdf
+
+      - name: build ogdf
+        if: steps.cache-ogdf.outputs.cache-hit != 'true'
+        run: |
+          cd ogdf-conda/src
+          cmake -DBUILD_SHARED_LIBS=ON .
+          make
+
+      - name: build tmap
+        run: |
+          ln -s . ogdf-conda/src/lib
+          LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out .
+          make
+          ls -ltrh out
+
+      - name: Debug with tmate on failure
+        if: ${{ failure()}}
+        uses: mxschmitt/action-tmate@v3
