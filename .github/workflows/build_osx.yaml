@@ -29,8 +29,7 @@ jobs:
 
       - name: build tmap
         run: |
-          cd tmap
-          ln -s ogdf-conda/src ogdf-conda/src/lib
+          ln -s . ogdf-conda/src/lib
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out .
           make
           ls -ltrh out
