@@ -15,15 +15,7 @@ jobs:
       #     repository: ogdf/ogdf
       #     path: ogdf
 
-      - name: cache OGDF built
-        id: cache-ogdf
-        uses: actions/cache@v3
-        with:
-          path:  ogdf-conda/src/lib
-          key: ${{ runner.os }}-ogdf
-
       - name: build ogdf
-        if: steps.cache-ogdf.outputs.cache-hit != 'true'
         run: |
           cd ogdf-conda/src
           cmake -DBUILD_SHARED_LIBS=ON .
