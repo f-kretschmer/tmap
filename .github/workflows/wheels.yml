@@ -1,7 +1,8 @@
 ## IMPORTANT: the configuration for cibuildwheel is kept in pyproject.toml
 name: wheels
 
-on: [push, pull_request]
+on:
+  workflow_dispatch:
 
 jobs:
   generate-wheels-matrix:
@@ -52,4 +53,3 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           path: ./wheelhouse/*.whl
-

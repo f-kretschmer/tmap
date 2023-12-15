@@ -1,0 +1,31 @@
+name: build_linux
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
+      #   with:
+      #     repository: ogdf/ogdf
+      #     path: ogdf
+
+      - name: build ogdf
+        run: |
+          cd ogdf-conda/src
+          cmake -DBUILD_SHARED_LIBS=ON .
+          make
+
+      - name: build tmap
+        run: |
+          cd tmap
+          LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out .
+          make
+          ls -ltrh out
+
+      - name: Debug with tmate on failure
+        if: ${{ failure()}}
+        uses: mxschmitt/action-tmate@v3
