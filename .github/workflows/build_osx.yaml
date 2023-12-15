@@ -27,7 +27,7 @@ jobs:
           cmake -DBUILD_SHARED_LIBS=ON .
           make
           mkdir lib
-          mv *.dynlib lib
+          mv *.dylib lib
 
       - name: build tmap
         run: |
