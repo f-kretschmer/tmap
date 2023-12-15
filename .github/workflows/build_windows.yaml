@@ -38,6 +38,7 @@ jobs:
 
 # LOL: have to run cmake twice ???!!
       - name: build tmap
+        shell: bash
         run: |
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "Visual Studio 17 2022" -A x64 -T ClangCL . ||:
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "Visual Studio 17 2022" -A x64 -T ClangCL .
