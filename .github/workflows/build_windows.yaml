@@ -32,22 +32,19 @@ jobs:
       - name: build ogdf
         run: |
           cd ogdf-conda/src
-          # cmake -G "MSYS Makefiles" -DBUILD_SHARED_LIBS=ON .
-          cmake -G "MSYS Makefiles" .
+          cmake -DBUILD_SHARED_LIBS=ON -G "Visual Studio 17 2022" -A x64 -T ClangCL .
           cmake --build .
-          mkdir lib
-          # mv *.dll lib
-          mv lib*.a lib
+          ln -s Debug/ lib
 
       - name: build tmap
         run: |
-          LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -G "MSYS Makefiles" -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out cmake .
+          LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -T ClangCL .
           cmake --build .
-          ls -ltrh *.dll
+          ls -ltrh Debug/*
 
       - name: make zip of binaries
         run: |
-          zip binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* *.dll
+          zip binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* Debug/*.dll
 
       - uses: softprops/action-gh-release@v1
         with:
