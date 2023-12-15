@@ -69,15 +69,13 @@ SET(SOURCE_DIR "src/_tmap")
 include_directories(${SOURCE_DIR})
 SET(SOURCES "${SOURCE_DIR}/layout.cc" "${SOURCE_DIR}/lshforest.cc" "${SOURCE_DIR}/minhash.cc" "${SOURCE_DIR}/analyse.cc")
 
-# Generate python module
-add_subdirectory(pybind11)
 
-pybind11_add_module(_tmap ${SOURCES} "${SOURCE_DIR}/bindings.cc")
+add_library(tmap SHARED ${SOURCES})
 if(MSVC)
-target_link_libraries(_tmap PRIVATE OGDF.lib COIN.lib)
+  target_link_libraries(tmap PRIVATE OGDF.lib COIN.lib)
 else()
-target_link_libraries(_tmap PRIVATE OGDF COIN)
+  target_link_libraries(tmap PRIVATE OGDF COIN)
 endif(MSVC)
 
-target_link_libraries(_tmap PRIVATE Threads::Threads)
-target_link_libraries(_tmap PRIVATE ${OpenMP_CXX_FLAGS})
+target_link_libraries(tmap PRIVATE Threads::Threads)
+target_link_libraries(tmap PRIVATE ${OpenMP_CXX_FLAGS})
