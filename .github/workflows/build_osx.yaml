@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       # - uses: actions/checkout@v4
@@ -36,6 +38,16 @@ jobs:
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out .
           make
           ls -ltrh out
+
+      - name: make zip of binaries
+        run: |
+          zip binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* out/*
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.zip"
+          allowUpdates: true
+          name: "0.1"
 
       - name: Debug with tmate on failure
         if: ${{ failure()}}
