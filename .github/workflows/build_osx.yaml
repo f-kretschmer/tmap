@@ -26,12 +26,13 @@ jobs:
           cd ogdf-conda/src
           cmake -DBUILD_SHARED_LIBS=ON .
           make
+          mkdir lib
+          mv *.dynlib lib
 
       - name: build tmap
         run: |
           brew install libomp
           export OpenMP_ROOT=$(brew --prefix)/opt/libomp
-          ln -s . ogdf-conda/src/lib
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out .
           make
           ls -ltrh out
