@@ -38,7 +38,7 @@ jobs:
         if: steps.cache-ogdf.outputs.cache-hit != 'true'
         run: |
           cd ogdf-conda/src
-          cmake -DBUILD_SHARED_LIBS=ON -G "MSYS Makefiles" .
+          cmake -G "Visual Studio 17 2022" -A x64 -T ClangCL .
           make
           mkdir lib
           mv *.dll lib
@@ -47,7 +47,7 @@ jobs:
         run: |
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "Visual Studio 17 2022" -A x64 -T ClangCL .
           make
-          ls -ltrh out
+          ls -ltrh *.dll
 
       - name: Debug with tmate on failure
         if: ${{ failure()}}
