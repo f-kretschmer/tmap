@@ -45,7 +45,7 @@ jobs:
 
       - name: make zip of binaries
         run: |
-          zip -j binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* Debug/*.dll
+          zip -j binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* Debug/*
 
       - uses: softprops/action-gh-release@v1
         with:
