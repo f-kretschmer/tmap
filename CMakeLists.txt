@@ -47,7 +47,10 @@ SET(SOURCE_DIR "src/_tmap")
 include_directories(${SOURCE_DIR})
 SET(SOURCES "${SOURCE_DIR}/layout.cc" "${SOURCE_DIR}/lshforest.cc" "${SOURCE_DIR}/minhash.cc" "${SOURCE_DIR}/analyse.cc")
 
-add_library(tmap $<IF:CMAKE_HOST_WIN32,STATIC,SHARED> ${SOURCES})
+if (CMAKE_HOST_WIN32)
+  add_library(tmap STATIC ${SOURCES})
+else()
+  add_library(tmap SHARED ${SOURCES})
 
 if(MSVC)
   target_link_libraries(tmap PRIVATE OGDF.lib COIN.lib)
