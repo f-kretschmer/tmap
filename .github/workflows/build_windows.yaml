@@ -43,6 +43,12 @@ jobs:
           cmake --build .
           ls -ltrh Debug/*
 
+      - name: check tmap exported symbols
+        shell: bash
+        run: |
+          objdump -p tmap.lib || true
+          objdump -p tmap.dll || true
+
       - name: make zip of binaries
         run: |
           zip -j binaries-${{ runner.os }}.zip ogdf-conda/src/lib/* Debug/*
