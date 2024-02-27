@@ -26,6 +26,7 @@ jobs:
             base-devel
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-openmp
             git
             zip
 
@@ -46,8 +47,8 @@ jobs:
       - name: check tmap exported symbols
         shell: bash
         run: |
-          objdump -p tmap.lib || true
-          objdump -p tmap.dll || true
+          objdump -p Debug/tmap.lib || true
+          objdump -p Debug/tmap.dll || true
 
       - name: make zip of binaries
         run: |
