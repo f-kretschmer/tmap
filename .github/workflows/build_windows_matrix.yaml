@@ -1,0 +1,60 @@
+name: build_windows_matrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        generator: ['Ninja', 'MSYS Makefiles', 'Visual Studio 17 2022']
+        include:
+          - { sys: mingw64, env: x86_64 }
+          - { sys: ucrt64,  env: ucrt-x86_64 }
+          - { sys: clang64, env: clang-x86_64 }
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: ${{matrix.sys}}
+          install: >-
+            base-devel
+            mingw-w64-${{matrix.env}}-toolchain
+            mingw-w64-${{matrix.env}}-cmake
+            mingw-w64-${{matrix.env}}-openmp
+            mingw-w64-${{matrix.env}}-ninja
+            git
+            zip
+
+      - name: build ogdf
+        run: |
+          cd ogdf-conda/src
+          cmake -DBUILD_SHARED_LIBS=ON -G "${{matrix.generator}}" .
+          cmake --build .
+          ln -s Debug/ lib
+
+      - name: build tmap
+        shell: bash             # for whatever reason only works with "bash" as shell
+        run: |
+          LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "${{matrix.generator}}" .
+          cmake --build .
+          ls -ltrh Debug/*
+
+      - name: check tmap exported symbols
+        shell: bash
+        run: |
+          objdump -p Debug/tmap.lib || true
+          objdump -p Debug/tmap.dll || true
+
+      # - name: Debug with tmate on failure
+      #   if: ${{ failure()}}
+      #   uses: mxschmitt/action-tmate@v3
