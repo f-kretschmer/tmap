@@ -1,0 +1,42 @@
+name: windows_test_systems
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - { sys: mingw64, env: x86_64 }
+          - { sys: ucrt64,  env: ucrt-x86_64 }
+          - { sys: clang64, env: clang-x86_64 }
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
+      #   with:
+      #     repository: ogdf/ogdf
+      #     path: ogdf
+
+      - name: setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: ${{matrix.sys}}
+          install: >-
+            base-devel
+            mingw-w64-${{matrix.env}}-toolchain
+            mingw-w64-${{matrix.env}}-cmake
+            mingw-w64-${{matrix.env}}-openmp
+            mingw-w64-${{matrix.env}}-ninja
+            git
+            zip
+
+      - name: cmake help
+        run: |
+          cd ogdf-conda/src
+          cmake --help
