@@ -44,7 +44,10 @@ jobs:
           cd ogdf-conda/src
           cmake -DBUILD_SHARED_LIBS=ON -G "${{matrix.generator}}" .
           cmake --build .
-          ln -s Debug/ lib
+          ln -s Debug/ lib || true
+          mkdir lib || true
+          cp *.dll* lib || true
+          cp *.lib lib || true
 
       - name: build tmap
         shell: bash             # for whatever reason only works with "bash" as shell
