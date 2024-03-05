@@ -9,6 +9,7 @@ jobs:
     permissions:
       contents: write
     strategy:
+      fail-fast: false
       matrix:
         generator: ['Ninja', 'MSYS Makefiles', 'Visual Studio 17 2022']
         include:
