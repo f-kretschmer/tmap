@@ -48,12 +48,13 @@ jobs:
           mkdir lib || true
           cp *.dll* lib || true
           cp *.lib lib || true
+          find . \( -iname '*.dll*' -o -iname '*.lib*' \) -exec ls -ltrh {} \;
 
       - name: build tmap
         run: |
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "${{matrix.generator}}" .
           cmake --build .
-          ls -ltrh Debug/*
+          find . \( -iname '*.dll*' -o -iname '*.lib*' \) -exec ls -ltrh {} \;
 
       - name: check tmap exported symbols
         run: |
