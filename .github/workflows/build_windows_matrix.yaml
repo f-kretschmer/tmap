@@ -60,6 +60,20 @@ jobs:
         run: |
           objdump -p Debug/tmap.lib || true
           objdump -p Debug/tmap.dll || true
+          objdump -p libtmap.dll || true
+
+      - name: make zip of binaries
+        run: |
+          zip -j binaries-${{ runner.os }}-${{ matrix.generator}}-${{ matrix.sys }}-${{ matrix.env }}.zip ogdf-conda/src/lib/* *.dll*
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: "*.zip"
+          tag_name: "win_alternatives"
+
+      - name: Debug with tmate on failure
+        if: ${{ failure()}}
+        uses: mxschmitt/action-tmate@v3
 
       # - name: Debug with tmate on failure
       #   if: ${{ failure()}}
