@@ -50,14 +50,12 @@ jobs:
           cp *.lib lib || true
 
       - name: build tmap
-        shell: bash             # for whatever reason only works with "bash" as shell
         run: |
           LIBOGDF_INSTALL_PATH=ogdf-conda/src cmake -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=out -G "${{matrix.generator}}" .
           cmake --build .
           ls -ltrh Debug/*
 
       - name: check tmap exported symbols
-        shell: bash
         run: |
           objdump -p Debug/tmap.lib || true
           objdump -p Debug/tmap.dll || true
