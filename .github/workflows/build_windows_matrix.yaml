@@ -11,7 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        generator: ['Ninja', 'MSYS Makefiles', 'Visual Studio 17 2022']
+        generator: ['Ninja', 'MSYS Makefiles']
+        sys: ['mingw64', 'ucrt64', 'clang64']
         include:
           - sys: mingw64
             env: x86_64
@@ -64,7 +65,7 @@ jobs:
 
       - name: make zip of binaries
         run: |
-          zip -j binaries-${{ runner.os }}-${{ matrix.generator}}-${{ matrix.sys }}-${{ matrix.env }}.zip ogdf-conda/src/lib/* *.dll*
+          zip -j binaries-${{ runner.os }}-${{ matrix.generator }}-${{ matrix.sys }}.zip ogdf-conda/src/lib/* *.dll*
 
       - uses: softprops/action-gh-release@v1
         with:
